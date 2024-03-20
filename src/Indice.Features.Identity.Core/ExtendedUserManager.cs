@@ -149,23 +149,39 @@ public class ExtendedUserManager<TUser> : UserManager<TUser> where TUser : User
 
     /// <inheritdoc />
     public async override Task<IdentityResult> SetUserNameAsync(TUser user, string userName) {
-        var previousValue = user.UserName;
+        var previousUsername = user.UserName;
         var result = await base.SetUserNameAsync(user, userName);
         if (result.Succeeded) {
-            await _eventService.Publish(new UserNameChangedEvent(UserEventContext.InitializeFromUser(user), previousValue));
+            await _eventService.Publish(new UserNameChangedEvent(UserEventContext.InitializeFromUser(user), previousUsername));
         }
         return result;
     }
 
     /// <inheritdoc />
     public override async Task<IdentityResult> SetEmailAsync(TUser user, string email) {
+        IdentityResult result;
+        var previousEmail = user.Email;
         if (EmailAsUserName) {
-            var result = await SetUserNameAsync(user, email);
+            result = await SetUserNameAsync(user, email);
             if (!result.Succeeded) {
                 return result;
             }
         }
-        return await base.SetEmailAsync(user, email);
+        result = await base.SetEmailAsync(user, email);
+        if (result.Succeeded) {
+            await _eventService.Publish(new EmailChangedEvent(UserEventContext.InitializeFromUser(user), previousEmail));
+        }
+        return result;
+    }
+
+    /// <inheritdoc />
+    public override async Task<IdentityResult> SetPhoneNumberAsync(TUser user, string phoneNumber) {
+        var previousPhoneNumber = user.PhoneNumber;
+        var result = await base.SetPhoneNumberAsync(user, phoneNumber);
+        if (result.Succeeded) {
+            await _eventService.Publish(new PhoneNumberChangedEvent(UserEventContext.InitializeFromUser(user), previousPhoneNumber));
+        }
+        return result;
     }
 
     /// <inheritdoc />

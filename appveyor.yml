@@ -28,6 +28,7 @@ before_build:
 - ps: dotnet restore
 build_script:
 - ps: dotnet build Indice.Platform.Ecmascript.slnf --no-restore --configuration Release
+- ps: ./generate-solution-filters.ps1 -solutionFile Indice.Platform.sln -ignoreFile solution-filters-ignore.yaml -outputFile Indice.Platform.slnf
 - ps: dotnet build Indice.Platform.slnf --no-restore --configuration Release
 test_script:
 - ps: dotnet test --no-build --configuration Release

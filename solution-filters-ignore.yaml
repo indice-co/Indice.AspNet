@@ -1,0 +1,5 @@
+# Project folders to ignore from generated solution filter
+Indice.Features.Cases.App
+Indice.Features.Identity.AdminUI.App
+Indice.Features.Messages.App
+Indice.Features.Risk.App

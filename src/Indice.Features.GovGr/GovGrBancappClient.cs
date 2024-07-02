@@ -25,7 +25,7 @@ internal class GovGrBancappClient : IBancappService
 
 
     /// <inheritdoc />
-    public async Task<BancappGCloudUploadResponse> UploadFile(Stream stream, string fileName) {
+    public async Task<BancappGCloudUploadResponse> UploadFile(Stream stream, string fileName, string token) {
         if (!stream.CanSeek) {
             return BancappGCloudUploadResponse.Fail("Stream needs to be open/seekable!");
         }
@@ -49,10 +49,15 @@ internal class GovGrBancappClient : IBancappService
             Name = "\"file\"",
             FileName = $"\"{fileName}\""
         };
+        
         streamContent.Headers.ContentType = new MediaTypeHeaderValue("text/csv");
         using var formData = new MultipartFormDataContent();
         formData.Add(streamContent);
 
+        if (!string.IsNullOrWhiteSpace(token)) {
+            streamContent.Headers.Add("token", token);
+        }
+        
         try {
             return await BancappGCloudUploadResponse.FromHttpResponseMessage(
                 await _httpClient.PostAsync($"{FunctionUrl}/api/uploadFile", formData));

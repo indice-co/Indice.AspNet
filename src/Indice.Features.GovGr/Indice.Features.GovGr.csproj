@@ -3,6 +3,7 @@
     <Description>Indice GovGr Feature</Description>
     <TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0;</TargetFrameworks>
     <Authors>Christos Asvestopoulos, Constantinos Leftheris</Authors>
+    <VersionPrefix>$(VersionPrefixGovGr)</VersionPrefix>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageTags>AspNetCore;GovGr;HttpClient</PackageTags>
   </PropertyGroup>
